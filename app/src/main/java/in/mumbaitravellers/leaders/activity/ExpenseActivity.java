@@ -165,6 +165,7 @@ public class ExpenseActivity extends AppCompatActivity {
                 + "\nFood: " + food
                 + "\nGuide: " + guide
                 + "\nPersonal: " + personal
+                + "\nParking: " + parking
                 + "\nTips: " + tips
                 + "\nTolls: " + tolls
                 + "\nTransport: " + transport
