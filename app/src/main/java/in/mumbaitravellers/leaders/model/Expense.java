@@ -8,14 +8,15 @@ public class Expense {
     //@PrimaryKey
     private int id;
     private int  eventId;
-    private String amount;
+    private int amount;
+    private String type;
     private String description;
 
     //Constructors
     public Expense() {
     }
 
-    public Expense(int id, int eventId, String amount, String description) {
+    public Expense(int id, int eventId, int amount, String description) {
         this.id = id;
         this.eventId = eventId;
         this.amount = amount;
@@ -39,12 +40,20 @@ public class Expense {
         this.eventId = eventId;
     }
 
-    public String getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getDescription() {
@@ -54,4 +63,6 @@ public class Expense {
     public void setDescription(String description) {
         this.description = description;
     }
+
+
 }

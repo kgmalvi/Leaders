@@ -7,11 +7,21 @@
     <TextView
         android:id="@+id/tv_eventName"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="wrap_content"
+        android:textSize="35dp"
+        android:textColor="#000000"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv_startDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"/>
 
     <TextView
         android:id="@+id/tv_leaders"
         android:layout_width="match_parent"
-        android:layout_height="40dp" />
+        android:layout_height="wrap_content"
+        android:textSize="20dp"/>
 
 </LinearLayout>

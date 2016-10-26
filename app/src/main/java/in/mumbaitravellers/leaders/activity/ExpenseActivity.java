@@ -2,31 +2,52 @@ package in.mumbaitravellers.leaders.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
-
-import java.util.List;
 
 import in.mumbaitravellers.leaders.DBHelper.DatabaseHelper;
 import in.mumbaitravellers.leaders.R;
+import in.mumbaitravellers.leaders.adapters.ExpenseAdapter;
 import in.mumbaitravellers.leaders.model.Expense;
 
 public class ExpenseActivity extends AppCompatActivity {
 
 
     public static int eventID;
+    static String eventName;
+    static String eventStart;
+    static String eventEnd;
+    static String eventLeader;
+    static String eventCash;
+    static String eventOnTour;
+
+    static int accommodation;
+    static int food;
+    static int guide;
+    static int parking;
+    static int personal;
+    static int tips;
+    static int tolls;
+    static int transport;
+    static int totalCash;
+    static int totalExpense;
+    static int cashReturn;
     DatabaseHelper db;
     private LayoutInflater inflater;
 
@@ -39,13 +60,38 @@ public class ExpenseActivity extends AppCompatActivity {
 
         db = new DatabaseHelper(getApplicationContext());
 
-        displayList();
-
         Expense expense = new Expense();
         eventID = getIntent().getExtras().getInt("EventID");
+        eventName = getIntent().getExtras().getString("EventName");
+        eventStart = getIntent().getExtras().getString("EventStart");
+        eventEnd = getIntent().getExtras().getString("EventEnd");
+        eventLeader = getIntent().getExtras().getString("EventLeader");
+        eventCash = getIntent().getExtras().getString("EventCash");
+        eventOnTour = getIntent().getExtras().getString("EventOnTour");
+
+        Log.e("Tour: ", eventName + eventStart + eventEnd + eventLeader + eventCash + eventOnTour);
+
         expense.setEventId(eventID);
-        /*Log.e("int.eventID:", String.valueOf(eventID));
-        Log.e("expense.getEventID:", String.valueOf(expense.getEventId()));*/
+
+        accommodation = db.addAccommodation(eventID);
+        food = db.addFood(eventID);
+        guide = db.addGuide(eventID);
+        parking = db.addParking(eventID);
+        personal = db.addPersonal(eventID);
+        tips = db.addTips(eventID);
+        tolls = db.addTolls(eventID);
+        transport = db.addTransport(eventID);
+
+        totalCash = Integer.parseInt(eventCash) + Integer.parseInt(eventOnTour);
+        totalExpense = accommodation + food + guide + personal + parking
+                + tips + tolls + transport;
+        cashReturn = totalCash - totalExpense;
+        Log.e("Cash: ", String.valueOf(totalCash));
+        Log.e("Expense: ", String.valueOf(totalExpense));
+        Log.e("Return", String.valueOf(cashReturn));
+
+
+        displayList();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,6 +101,7 @@ public class ExpenseActivity extends AppCompatActivity {
                 View content = inflater.inflate(R.layout.activity_add_new_expense, null);
                 final EditText editExpense = (EditText) content.findViewById(R.id.edtxt_expense);
                 final EditText editDescription = (EditText) content.findViewById(R.id.edtxt_description);
+                final Spinner spinnerType = (Spinner) content.findViewById(R.id.spinner_type);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(ExpenseActivity.this);
                 builder.setView(content)
@@ -65,12 +112,9 @@ public class ExpenseActivity extends AppCompatActivity {
 
                                 Expense expense = new Expense();
                                 expense.setEventId(eventID);
-                                expense.setAmount(editExpense.getText().toString());
+                                expense.setAmount(Integer.parseInt(editExpense.getText().toString()));
+                                expense.setType(spinnerType.getSelectedItem().toString());
                                 expense.setDescription(editDescription.getText().toString());
-
-                                /*Log.e("ID: ", String.valueOf(expense.getEventId()));
-                                Log.e("Amount: ", expense.getAmount());
-                                Log.e("Des: ", expense.getDescription());*/
 
                                 long t = db.createExpense(expense);
 
@@ -108,12 +152,47 @@ public class ExpenseActivity extends AppCompatActivity {
         String[] CC = {""};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
+        Log.e("acc", eventName);
+
+        SpannableString styledString = new SpannableString(eventName + "\n\n"
+                + eventStart + " to " + eventEnd
+                + "\nLeader: " + eventLeader
+                + "\nCash Carried: " + eventCash
+                + "\nOn Tour Collection: " + eventOnTour
+                + "\n\nTotal Cash: " + totalCash
+                + "\n\n\n\nExpenses:"
+                + "\n\nAccommodation: " + accommodation
+                + "\nFood: " + food
+                + "\nGuide: " + guide
+                + "\nPersonal: " + personal
+                + "\nTips: " + tips
+                + "\nTolls: " + tolls
+                + "\nTransport: " + transport
+                + "\n\nTotal Expense: " + totalExpense
+                + "\nCash to be Return: " + cashReturn
+        );
+
+        styledString.setSpan(new RelativeSizeSpan(2f), 0, eventName.length(), 0);
+        // make text bold
+        styledString.setSpan(new StyleSpan(Typeface.BOLD), 0, eventName.length(), 0);
+        /*// underline text
+        styledString.setSpan(new UnderlineSpan(), 13, 23, 0);
+        // make text italic
+        styledString.setSpan(new StyleSpan(Typeface.ITALIC), 25, 31, 0);
+        // change text color
+        styledString.setSpan(new ForegroundColorSpan(Color.GREEN), 48, 55, 0);
+        // highlight text
+        styledString.setSpan(new BackgroundColorSpan(Color.CYAN), 57, 68, 0);
+        // make the subscript text smaller
+        styledString.setSpan(new RelativeSizeSpan(0.5f), 87, 96, 0);*/
+
+
         emailIntent.setData(Uri.parse("mailto:"));
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Expense Sheet");
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Detail expense sheeet will appear here.");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, styledString);
 
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
@@ -125,14 +204,14 @@ public class ExpenseActivity extends AppCompatActivity {
     }
 
     private void displayList() {
-        List<String> expenseList = db.getExpense(eventID);
         ListView expenseListView = (ListView) findViewById(R.id.expense_listview);
 
-        expenseListView.setAdapter(new ArrayAdapter<String>(
-                ExpenseActivity.this,
+        ExpenseAdapter expenseAdapter = new ExpenseAdapter(
+                this,
                 R.layout.expense_list,
-                R.id.text_amount,
-                expenseList));
+                db.getAllExpenses(eventID));
+
+        expenseListView.setAdapter(expenseAdapter);
     }
 
 }

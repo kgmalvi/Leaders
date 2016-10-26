@@ -2,27 +2,27 @@ package in.mumbaitravellers.leaders.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import java.util.List;
-
 import in.mumbaitravellers.leaders.DBHelper.DatabaseHelper;
 import in.mumbaitravellers.leaders.R;
+import in.mumbaitravellers.leaders.adapters.TourAdapter;
 import in.mumbaitravellers.leaders.model.Expense;
 import in.mumbaitravellers.leaders.model.Tour;
+
+import static android.R.string.cancel;
 
 public class TourActivity extends AppCompatActivity {
 
@@ -42,15 +42,7 @@ public class TourActivity extends AppCompatActivity {
         db = new DatabaseHelper(getApplicationContext());
 
         displayList();
-
-        List<String> cs = db.getTours();
         ListView tourList = (ListView) findViewById(R.id.tour_listview);
-
-        tourList.setAdapter(new ArrayAdapter<String>(
-                TourActivity.this,
-                R.layout.tour_list,
-                R.id.tv_eventName,
-                cs));
 
         tourList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -58,10 +50,16 @@ public class TourActivity extends AppCompatActivity {
                 Tour tour = new Tour();
                 Expense expense = new Expense();
                 int s = db.getEventID(position);
-                //Log.e("EventID", "EVENT ID: " + s);
                 expense.setEventId(s);
                 Intent intent = new Intent(TourActivity.this, ExpenseActivity.class);
-                intent.putExtra("EventID", s);
+                intent.putExtra("EventID", db.getEventID(position));
+                intent.putExtra("EventName", db.getTourName(position + 1));
+                intent.putExtra("EventStart", db.getStartDate(position + 1));
+                intent.putExtra("EventEnd", db.getEndDate(position + 1));
+                intent.putExtra("EventLeader", db.getLeader(position + 1));
+                intent.putExtra("EventCash", db.getCashCarried(position + 1));
+                intent.putExtra("EventOnTour", db.getOnTour(position + 1));
+
                 startActivity(intent);
             }
         });
@@ -78,29 +76,50 @@ public class TourActivity extends AppCompatActivity {
                 final EditText editCashCarried = (EditText) content.findViewById(R.id.edTxt_CashCarried);
                 final EditText editOnTour = (EditText) content.findViewById(R.id.edTxt_TourCollection);
 
+
                 AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
                 builder.setView(content)
                         .setTitle("Add Event")
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                                Tour tour = new Tour();
+                                        if (editEvent.getText().toString().trim().length() < 1 ||
+                                                editStartDate.getText().toString().trim().length() < 1 ||
+                                                editEndDate.getText().toString().trim().length() < 1 ||
+                                                editLeader.getText().toString().trim().length() < 1 ||
+                                                editCashCarried.getText().toString().trim().length() < 1 ||
+                                                editOnTour.getText().toString().trim().length() < 1) {
+                                            Snackbar.make(findViewById(android.R.id.content),
+                                                    "Please fill all the details.", Snackbar.LENGTH_LONG)
+                                                    .setActionTextColor(Color.RED)
+                                                    .show();
+                                        } else {
 
-                                tour.setEventId((int) System.currentTimeMillis());
-                                tour.setEventName(editEvent.getText().toString());
-                                tour.setEventStartDate(editStartDate.getText().toString());
-                                tour.setEventEndDate(editEndDate.getText().toString());
-                                tour.setLeaders(editLeader.getText().toString());
-                                tour.setCashCarried(editCashCarried.getText().toString());
-                                tour.setOnTourCollection(editOnTour.getText().toString());
+                                            Tour tour = new Tour();
 
-                                long t = db.createTour(tour, new long[0]);
+                                            tour.setEventId((int) System.currentTimeMillis());
+                                            tour.setEventName(editEvent.getText().toString());
+                                            tour.setEventStartDate(editStartDate.getText().toString());
+                                            tour.setEventEndDate(editEndDate.getText().toString());
+                                            tour.setLeaders(editLeader.getText().toString());
+                                            tour.setCashCarried(editCashCarried.getText().toString());
+                                            tour.setOnTourCollection(editOnTour.getText().toString());
 
-                                displayList();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                            long t = db.createTour(tour, new long[0]);
+
+                                            Snackbar.make(findViewById(android.R.id.content),
+                                                    "Event Added Successfully.", Snackbar.LENGTH_LONG)
+                                                    .setActionTextColor(Color.RED)
+                                                    .show();
+
+                                            displayList();
+                                        }
+
+                                    }
+                                })
+                        .setNegativeButton(cancel, new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -114,36 +133,14 @@ public class TourActivity extends AppCompatActivity {
     }
 
     private void displayList() {
-        List<String> cs = db.getTours();
-        ListView ls = (ListView) findViewById(R.id.tour_listview);
+        ListView tourListView = (ListView) findViewById(R.id.tour_listview);
 
-        ls.setAdapter(new ArrayAdapter<String>(
-                TourActivity.this,
+        TourAdapter tourAdapter = new TourAdapter(
+                this,
                 R.layout.tour_list,
-                R.id.tv_eventName,
-                cs));
-    }
+                db.getAllTours()
+        );
 
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tour, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        tourListView.setAdapter(tourAdapter);
     }
 }
