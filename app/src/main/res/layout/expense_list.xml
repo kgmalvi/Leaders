@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    android:background="@drawable/listitem_shape"
     android:orientation="vertical">
 
     <TextView
@@ -36,6 +37,6 @@
         android:id="@+id/text_description"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
 
 </LinearLayout>

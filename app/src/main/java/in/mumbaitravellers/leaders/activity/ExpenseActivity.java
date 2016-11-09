@@ -69,8 +69,6 @@ public class ExpenseActivity extends AppCompatActivity {
         eventCash = getIntent().getExtras().getString("EventCash");
         eventOnTour = getIntent().getExtras().getString("EventOnTour");
 
-        Log.e("Tour: ", eventName + eventStart + eventEnd + eventLeader + eventCash + eventOnTour);
-
         expense.setEventId(eventID);
 
         accommodation = db.addAccommodation(eventID);
@@ -86,10 +84,6 @@ public class ExpenseActivity extends AppCompatActivity {
         totalExpense = accommodation + food + guide + personal + parking
                 + tips + tolls + transport;
         cashReturn = totalCash - totalExpense;
-        Log.e("Cash: ", String.valueOf(totalCash));
-        Log.e("Expense: ", String.valueOf(totalExpense));
-        Log.e("Return", String.valueOf(cashReturn));
-
 
         displayList();
 
@@ -198,7 +192,6 @@ public class ExpenseActivity extends AppCompatActivity {
         try {
             startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
-            Log.i("Finished ", "");
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(ExpenseActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }

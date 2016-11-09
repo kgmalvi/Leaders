@@ -14,7 +14,8 @@
             android:id="@+id/edTxt_EventName"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:hint="Event Name" />
+            android:hint="Event Name"
+            android:inputType="textCapCharacters" />
 
         <EditText
             android:id="@+id/edTxt_EventSDate"
@@ -23,6 +24,7 @@
             android:ems="10"
             android:hint="Event Start Date"
             android:inputType="date" />
+
 
         <EditText
             android:id="@+id/edTxt_EventEDate"
@@ -37,7 +39,8 @@
             android:id="@+id/edTxt_Leader"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:hint="Leader" />
+            android:hint="Leader"
+            android:inputType="textCapCharacters" />
 
         <EditText
             android:id="@+id/edTxt_CashCarried"

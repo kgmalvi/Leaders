@@ -2,26 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/listitem_shape"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_eventName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="35dp"
         android:textColor="#000000"
-        android:textStyle="bold"/>
+        android:textSize="35dp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tv_startDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
 
     <TextView
         android:id="@+id/tv_leaders"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="20dp"/>
+        android:textSize="20dp" />
 
 </LinearLayout>
