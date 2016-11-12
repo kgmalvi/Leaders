@@ -2,7 +2,7 @@
     <string name="app_name">MT Leaders</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_expense">ExpenseActivity</string>
-    <string name="expense_prompt">Choose expense type.</string>
+    <string name="expense_prompt">Choose expense type</string>
 
     <string-array name="expense_type_array">
         <item>Accommodation</item>

@@ -128,6 +128,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // insert row
         long tour_id = db.insert(TABLE_TOUR, null, values);
 
+        Log.e("Tour", String.valueOf(tour_id));
+
         return tour_id;
     }
 

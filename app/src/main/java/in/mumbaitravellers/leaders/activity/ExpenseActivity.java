@@ -2,10 +2,12 @@ package in.mumbaitravellers.leaders.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -107,6 +109,13 @@ public class ExpenseActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
 
+                                if (editExpense.getText().toString().trim().length() < 1) {
+                                    Snackbar.make(findViewById(android.R.id.content),
+                                            "Please Enter the Amount.", Snackbar.LENGTH_LONG)
+                                            .setActionTextColor(Color.RED)
+                                            .show();
+                                }
+
                                 Expense expense = new Expense();
                                 expense.setEventId(eventID);
                                 expense.setAmount(Integer.parseInt(editExpense.getText().toString()));
@@ -114,6 +123,11 @@ public class ExpenseActivity extends AppCompatActivity {
                                 expense.setDescription(editDescription.getText().toString());
 
                                 long t = db.createExpense(expense);
+
+                                Snackbar.make(findViewById(android.R.id.content),
+                                        "Expense Added Successfully.", Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.RED)
+                                        .show();
 
                                 displayList();
 
@@ -133,6 +147,9 @@ public class ExpenseActivity extends AppCompatActivity {
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
 
     }
 
