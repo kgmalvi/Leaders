@@ -113,7 +113,7 @@ public class ExpenseActivity extends AppCompatActivity {
                                 expense.setType(spinnerType.getSelectedItem().toString());
                                 expense.setDescription(editDescription.getText().toString());
 
-                                long t = db.createExpense(expense);
+                               //long t = db.createExpense(expense);
 
                                 displayList();
 

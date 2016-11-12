@@ -29,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
 
     // Database Version
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
 
     // Database Name
     private static final String DATABASE_NAME = "ExpenseSheet";
@@ -354,6 +354,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // updating row
         return db.update(TABLE_TOUR, values, KEY_ID + " = 1",
                 new String[]{String.valueOf(tour.getId())});
+    }
+
+    public int updatesTour(Tour tour) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_EVENTNAME, tour.getEventName());
+        values.put(KEY_EVENTSTARTDATE, tour.getEventStartDate());
+        values.put(KEY_EVENTENDDATE, tour.getEventEndDate());
+        values.put(KEY_LEADERS, tour.getLeaders());
+        values.put(KEY_CASHCARRIED, tour.getCashCarried());
+        values.put(KEY_ONTOURCOLLECTION, tour.getOnTourCollection());
+       /* values.put(KEY_CREATED_AT, getDateTime());
+        values.put(KEY_UPDATED_AT, getDateTime());*/
+
+        int i = db.update(TABLE_TOUR, values, KEY_EVENTID + "=?", new String[]{String.valueOf(tour.getEventId())});
+        Log.e("I=", String.valueOf(i));
+        return i;
     }
 
     /*

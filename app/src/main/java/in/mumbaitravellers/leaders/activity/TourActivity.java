@@ -69,7 +69,7 @@ public class TourActivity extends AppCompatActivity {
 
         tourList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 inflater = TourActivity.this.getLayoutInflater();
                 View content = inflater.inflate(R.layout.activity_add_new_trip, null);
                 final EditText editEvent = (EditText) content.findViewById(R.id.edTxt_EventName);
@@ -79,7 +79,7 @@ public class TourActivity extends AppCompatActivity {
                 final EditText editCashCarried = (EditText) content.findViewById(R.id.edTxt_CashCarried);
                 final EditText editOnTour = (EditText) content.findViewById(R.id.edTxt_TourCollection);
 
-                String ID = String.valueOf(db.getEventID(position));
+                final String ID = String.valueOf(db.getEventID(position));
                 String NAME = db.getTourName(position + 1);
                 String START = db.getStartDate(position + 1);
                 String END = db.getEndDate(position + 1);
@@ -103,7 +103,7 @@ public class TourActivity extends AppCompatActivity {
 
                                 Tour tour = new Tour();
 
-                                tour.setEventId((int) System.currentTimeMillis());
+                                tour.setEventId(db.getEventID(position));
                                 tour.setEventName(editEvent.getText().toString());
                                 tour.setEventStartDate(editStartDate.getText().toString());
                                 tour.setEventEndDate(editEndDate.getText().toString());
@@ -111,7 +111,8 @@ public class TourActivity extends AppCompatActivity {
                                 tour.setCashCarried(editCashCarried.getText().toString());
                                 tour.setOnTourCollection(editOnTour.getText().toString());
 
-                                //db.updateTour(tour);
+                                db.updatesTour(tour);
+                                displayList();
 
                             }
                         })
