@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
 
     // Database Version
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     // Database Name
     private static final String DATABASE_NAME = "ExpenseSheet";
@@ -65,19 +66,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_TOUR + "(" + KEY_ID + " INTEGER PRIMARY KEY ," + KEY_EVENTID + " INTEGER," + KEY_EVENTNAME
             + " TEXT," + KEY_EVENTSTARTDATE + " TEXT," + KEY_EVENTENDDATE + " TEXT," + KEY_LEADERS + " TEXT,"
             + KEY_CASHCARRIED + " TEXT," + KEY_ONTOURCOLLECTION + " TEXT,"
-            + KEY_CREATED_AT + " DATETIME" + KEY_UPDATED_AT + " DATETIME" + ")";
+            + KEY_CREATED_AT + " DATETIME, " + KEY_UPDATED_AT + " DATETIME" + ")";
 
     // Expense table create statement
     private static final String CREATE_TABLE_EXPENSE = "CREATE TABLE " + TABLE_EXPENSE
             + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_EVENTID + " INTEGER,"
             + KEY_AMOUNT + " INTEGER," + KEY_TYPE + " TEXT," + KEY_DESCRIPTION + " TEXT,"
-            + KEY_CREATED_AT + " DATETIME" + KEY_UPDATED_AT + " DATETIME" + ")";
+            + KEY_CREATED_AT + " DATETIME, " + KEY_UPDATED_AT + " DATETIME" + ")";
 
     // tour_expense table create statement
     private static final String CREATE_TABLE_TOUR_EXPENSE = "CREATE TABLE "
             + TABLE_TOUR_EXPENSE + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
             + KEY_TOUR_ID + " INTEGER," + KEY_EXPENSE_ID + " INTEGER,"
-            + KEY_CREATED_AT + " DATETIME" + KEY_UPDATED_AT + " DATETIME" + ")";
+            + KEY_CREATED_AT + " DATETIME, " + KEY_UPDATED_AT + " DATETIME" + ")";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -110,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /*
     * Creating a Tour
     */
-    public long createTour(Tour tour, long[] expense_ids) {
+    public long createTour(Tour tour) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -126,11 +127,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // insert row
         long tour_id = db.insert(TABLE_TOUR, null, values);
-
-        // assigning expense to Tour.
-        for (long expense_id : expense_ids) {
-            createTourExpense(tour_id, expense_id);
-        }
 
         return tour_id;
     }
@@ -343,7 +339,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_EVENTID, tour.getEventId());
         values.put(KEY_EVENTNAME, tour.getEventName());
         values.put(KEY_EVENTSTARTDATE, tour.getEventStartDate());
         values.put(KEY_EVENTENDDATE, tour.getEventEndDate());
@@ -351,9 +346,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_CASHCARRIED, tour.getCashCarried());
         values.put(KEY_ONTOURCOLLECTION, tour.getOnTourCollection());
         values.put(KEY_CREATED_AT, getDateTime());
+        values.put(KEY_UPDATED_AT, getDateTime());
+
+        Log.e("query", KEY_ID + " = ?" + "   " +
+                new String[]{String.valueOf(tour.getId())});
 
         // updating row
-        return db.update(TABLE_TOUR, values, KEY_ID + " = ?",
+        return db.update(TABLE_TOUR, values, KEY_ID + " = 1",
                 new String[]{String.valueOf(tour.getId())});
     }
 

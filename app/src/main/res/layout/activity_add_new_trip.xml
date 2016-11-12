@@ -10,52 +10,83 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Event Name" />
+
         <EditText
             android:id="@+id/edTxt_EventName"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:hint="Event Name"
+            android:paddingBottom="15dp"
             android:inputType="textCapCharacters" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Event Start Date" />
 
         <EditText
             android:id="@+id/edTxt_EventSDate"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Event Start Date"
             android:inputType="date" />
 
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Event End Date" />
 
         <EditText
             android:id="@+id/edTxt_EventEDate"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Event End Date"
             android:inputType="date" />
 
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Leader" />
 
         <EditText
             android:id="@+id/edTxt_Leader"
             android:layout_width="300dp"
             android:layout_height="50dp"
-            android:hint="Leader"
             android:inputType="textCapCharacters" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Cash Carried on Tour" />
 
         <EditText
             android:id="@+id/edTxt_CashCarried"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="Cash Carried on Tour"
             android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="On Tour Collection" />
 
         <EditText
             android:id="@+id/edTxt_TourCollection"
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:ems="10"
-            android:hint="On Tour Collection"
             android:inputType="number" />
 
     </LinearLayout>

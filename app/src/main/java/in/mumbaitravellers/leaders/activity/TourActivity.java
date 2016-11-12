@@ -1,5 +1,6 @@
 package in.mumbaitravellers.leaders.activity;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,8 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+
+import java.util.Calendar;
 
 import in.mumbaitravellers.leaders.DBHelper.DatabaseHelper;
 import in.mumbaitravellers.leaders.R;
@@ -107,7 +111,7 @@ public class TourActivity extends AppCompatActivity {
                                 tour.setCashCarried(editCashCarried.getText().toString());
                                 tour.setOnTourCollection(editOnTour.getText().toString());
 
-                                db.updateTour(tour);
+                                //db.updateTour(tour);
 
                             }
                         })
@@ -136,6 +140,25 @@ public class TourActivity extends AppCompatActivity {
                 final EditText editLeader = (EditText) content.findViewById(R.id.edTxt_Leader);
                 final EditText editCashCarried = (EditText) content.findViewById(R.id.edTxt_CashCarried);
                 final EditText editOnTour = (EditText) content.findViewById(R.id.edTxt_TourCollection);
+
+                editStartDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar mcurrentDate = Calendar.getInstance();
+                        int mYear = mcurrentDate.get(Calendar.YEAR);
+                        int mMonth = mcurrentDate.get(Calendar.MONTH);
+                        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog mDatePicker = new DatePickerDialog(TourActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                                // TODO Auto-generated method stub
+                    /*      Your code   to get date and time    */
+                            }
+                        }, mYear, mMonth, mDay);
+                        mDatePicker.setTitle("Select date");
+                        mDatePicker.show();
+                    }
+                });
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
                 builder.setView(content)
@@ -166,7 +189,7 @@ public class TourActivity extends AppCompatActivity {
                                             tour.setCashCarried(editCashCarried.getText().toString());
                                             tour.setOnTourCollection(editOnTour.getText().toString());
 
-                                            long t = db.createTour(tour, new long[0]);
+                                            long t = db.createTour(tour);
 
                                             Snackbar.make(findViewById(android.R.id.content),
                                                     "Event Added Successfully.", Snackbar.LENGTH_LONG)

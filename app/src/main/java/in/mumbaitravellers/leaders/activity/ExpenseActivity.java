@@ -12,14 +12,17 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import java.util.List;
 
 import in.mumbaitravellers.leaders.DBHelper.DatabaseHelper;
 import in.mumbaitravellers.leaders.R;
@@ -71,7 +74,7 @@ public class ExpenseActivity extends AppCompatActivity {
 
         expense.setEventId(eventID);
 
-        accommodation = db.addAccommodation(eventID);
+       /* accommodation = db.addAccommodation(eventID);
         food = db.addFood(eventID);
         guide = db.addGuide(eventID);
         parking = db.addParking(eventID);
@@ -83,7 +86,7 @@ public class ExpenseActivity extends AppCompatActivity {
         totalCash = Integer.parseInt(eventCash) + Integer.parseInt(eventOnTour);
         totalExpense = accommodation + food + guide + personal + parking
                 + tips + tolls + transport;
-        cashReturn = totalCash - totalExpense;
+        cashReturn = totalCash - totalExpense;*/
 
         displayList();
 
@@ -131,22 +134,53 @@ public class ExpenseActivity extends AppCompatActivity {
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Button btnSend = (Button) findViewById(R.id.btn_SendMail);
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_expense, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.send:
                 sendEmail();
-            }
-        });
+                break;
+        }
+        return true;
     }
 
     protected void sendEmail() {
-        Log.i("Send email", "");
+
+        accommodation = db.addAccommodation(eventID);
+        food = db.addFood(eventID);
+        guide = db.addGuide(eventID);
+        parking = db.addParking(eventID);
+        personal = db.addPersonal(eventID);
+        tips = db.addTips(eventID);
+        tolls = db.addTolls(eventID);
+        transport = db.addTransport(eventID);
+
+        totalCash = Integer.parseInt(eventCash) + Integer.parseInt(eventOnTour);
+        totalExpense = accommodation + food + guide + personal + parking
+                + tips + tolls + transport;
+        cashReturn = totalCash - totalExpense;
+
+        List<Expense> allExpense = db.getAllExpenses(eventID);
+
+        String s = "\n";
+        for (int i = 0; i < allExpense.size(); i++) {
+            s += "₹" + allExpense.get(i).getAmount() + "       " /*
+                    + allExpense.get(i).getType() + "\t" */
+                    + allExpense.get(i).getDescription() + "\n";
+        }
+
         String[] TO = {"jogi444u@gmail.com"};
         String[] CC = {""};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-
-        Log.e("acc", eventName);
 
         SpannableString styledString = new SpannableString(eventName + "\n\n"
                 + eventStart + " to " + eventEnd
@@ -165,7 +199,10 @@ public class ExpenseActivity extends AppCompatActivity {
                 + "\nTransport: " + transport
                 + "\n\nTotal Expense: " + totalExpense
                 + "\nCash to be Return: " + cashReturn
+                + "\n\n\nDetail Expenses:"
+                + "\n\n" + s
         );
+
 
         styledString.setSpan(new RelativeSizeSpan(2f), 0, eventName.length(), 0);
         // make text bold
@@ -186,7 +223,7 @@ public class ExpenseActivity extends AppCompatActivity {
         emailIntent.setType("text/plain");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
         emailIntent.putExtra(Intent.EXTRA_CC, CC);
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Expense Sheet");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Expense Sheet of " + eventName + " on " + eventStart);
         emailIntent.putExtra(Intent.EXTRA_TEXT, styledString);
 
         try {

@@ -14,6 +14,7 @@ public class Tour {
     private String leaders;
     private String cashCarried;
     private String onTourCollection;
+    private String createdAt;
 
     //Constructors
     public Tour() {
@@ -107,5 +108,13 @@ public class Tour {
 
     public void setOnTourCollection(String onTourCollection) {
         this.onTourCollection = onTourCollection;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

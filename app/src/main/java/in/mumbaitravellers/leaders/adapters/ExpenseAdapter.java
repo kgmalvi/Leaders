@@ -57,7 +57,6 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
             if (tvDescription != null) {
                 tvDescription.setText(expense.getDescription());
             }
-
         }
 
         return view;

@@ -11,6 +11,7 @@ public class Expense {
     private int amount;
     private String type;
     private String description;
+    private String updatedAt;
 
     //Constructors
     public Expense() {
@@ -64,5 +65,11 @@ public class Expense {
         this.description = description;
     }
 
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
 
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
+    }
 }
