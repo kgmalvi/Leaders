@@ -1,5 +1,22 @@
 <resources>
-    <string name="app_name">Leaders</string>
+    <string name="app_name">MT Leaders</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_expense">ExpenseActivity</string>
+    <string name="expense_prompt">Choose expense type</string>
+
+    <string-array name="expense_type_array">
+        <item>Accommodation</item>
+        <item>Food</item>
+        <item>Guide</item>
+        <item>Parking</item>
+        <item>Personal</item>
+        <item>Tips</item>
+        <item>Toll</item>
+        <item>Transport</item>
+    </string-array>
+
+    <string-array name="menu">
+        <item>Edit</item>
+        <item>Delete</item>
+    </string-array>
 </resources>

@@ -17,12 +17,12 @@
     <ListView
         android:id="@+id/expense_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/btn_SendMail"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Send Email"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5dip"
+        android:drawSelectorOnTop="true" />
 
 </LinearLayout>

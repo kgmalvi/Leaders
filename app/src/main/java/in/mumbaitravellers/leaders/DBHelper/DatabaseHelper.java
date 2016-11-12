@@ -29,7 +29,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String LOG = "DatabaseHelper";
 
     // Database Version
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 14;
 
     // Database Name
     private static final String DATABASE_NAME = "ExpenseSheet";
@@ -42,6 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Common column names
     private static final String KEY_ID = "id";
     private static final String KEY_CREATED_AT = "created_at";
+    private static final String KEY_UPDATED_AT = "updated_at";
 
     // TOURS Table - column names
     private static final String KEY_EVENTID = "eventId";
@@ -52,6 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // EXPENSES Table - column names
     private static final String KEY_AMOUNT = "amount";
+    private static final String KEY_TYPE = "type";
     private static final String KEY_DESCRIPTION = "description";
 
     // NOTE_TAGS Table - column names
@@ -64,23 +66,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_TOUR + "(" + KEY_ID + " INTEGER PRIMARY KEY ," + KEY_EVENTID + " INTEGER," + KEY_EVENTNAME
             + " TEXT," + KEY_EVENTSTARTDATE + " TEXT," + KEY_EVENTENDDATE + " TEXT," + KEY_LEADERS + " TEXT,"
             + KEY_CASHCARRIED + " TEXT," + KEY_ONTOURCOLLECTION + " TEXT,"
-            + KEY_CREATED_AT + " DATETIME" + ")";
+            + KEY_CREATED_AT + " DATETIME, " + KEY_UPDATED_AT + " DATETIME" + ")";
 
     // Expense table create statement
     private static final String CREATE_TABLE_EXPENSE = "CREATE TABLE " + TABLE_EXPENSE
             + "(" + KEY_ID + " INTEGER PRIMARY KEY," + KEY_EVENTID + " INTEGER,"
-            + KEY_AMOUNT + " TEXT," + KEY_DESCRIPTION + " TEXT,"
-            + KEY_CREATED_AT + " DATETIME" + ")";
+            + KEY_AMOUNT + " INTEGER," + KEY_TYPE + " TEXT," + KEY_DESCRIPTION + " TEXT,"
+            + KEY_CREATED_AT + " DATETIME, " + KEY_UPDATED_AT + " DATETIME" + ")";
 
     // tour_expense table create statement
     private static final String CREATE_TABLE_TOUR_EXPENSE = "CREATE TABLE "
             + TABLE_TOUR_EXPENSE + "(" + KEY_ID + " INTEGER PRIMARY KEY,"
             + KEY_TOUR_ID + " INTEGER," + KEY_EXPENSE_ID + " INTEGER,"
-            + KEY_CREATED_AT + " DATETIME" + ")";
+            + KEY_CREATED_AT + " DATETIME, " + KEY_UPDATED_AT + " DATETIME" + ")";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
 
     // ------------------------ Creating New Tables ----------------//
 
@@ -108,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /*
     * Creating a Tour
     */
-    public long createTour(Tour tour, long[] expense_ids) {
+    public long createTour(Tour tour) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -120,14 +123,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_CASHCARRIED, tour.getCashCarried());
         values.put(KEY_ONTOURCOLLECTION, tour.getOnTourCollection());
         values.put(KEY_CREATED_AT, getDateTime());
+        values.put(KEY_UPDATED_AT, getDateTime());
 
         // insert row
         long tour_id = db.insert(TABLE_TOUR, null, values);
 
-        // assigning expense to Tour.
-        for (long expense_id : expense_ids) {
-            createTourExpense(tour_id, expense_id);
-        }
+        Log.e("Tour", String.valueOf(tour_id));
 
         return tour_id;
     }
@@ -141,7 +142,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selectQuery = "SELECT  * FROM " + TABLE_TOUR + " WHERE "
                 + KEY_ID + " = " + tour_id;
 
-        Log.e(LOG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -166,8 +166,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Tour> getAllTours() {
         List<Tour> tours = new ArrayList<Tour>();
         String selectQuery = "SELECT  * FROM " + TABLE_TOUR;
-
-        Log.e(LOG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -240,6 +238,102 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return count;
     }
 
+    public String getTourName(int pos) {
+        String countQuery = "SELECT " + KEY_EVENTNAME + " FROM "
+                + TABLE_TOUR + " WHERE " + KEY_ID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        String count = null;
+
+        if (cursor.moveToNext()) {
+            count = cursor.getString(cursor.getColumnIndex(KEY_EVENTNAME));
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public String getStartDate(int pos) {
+        String countQuery = "SELECT " + KEY_EVENTSTARTDATE + " FROM "
+                + TABLE_TOUR + " WHERE " + KEY_ID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        String count = null;
+
+        if (cursor.moveToNext()) {
+            count = cursor.getString(cursor.getColumnIndex(KEY_EVENTSTARTDATE));
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public String getEndDate(int pos) {
+        String countQuery = "SELECT " + KEY_EVENTENDDATE + " FROM "
+                + TABLE_TOUR + " WHERE " + KEY_ID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        String count = null;
+
+        if (cursor.moveToNext()) {
+            count = cursor.getString(cursor.getColumnIndex(KEY_EVENTENDDATE));
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public String getLeader(int pos) {
+        String countQuery = "SELECT " + KEY_LEADERS + " FROM "
+                + TABLE_TOUR + " WHERE " + KEY_ID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        String count = null;
+
+        if (cursor.moveToNext()) {
+            count = cursor.getString(cursor.getColumnIndex(KEY_LEADERS));
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public String getCashCarried(int pos) {
+        String countQuery = "SELECT " + KEY_CASHCARRIED + " FROM "
+                + TABLE_TOUR + " WHERE " + KEY_ID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        String count = null;
+
+        if (cursor.moveToNext()) {
+            count = cursor.getString(cursor.getColumnIndex(KEY_CASHCARRIED));
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public String getOnTour(int pos) {
+        String countQuery = "SELECT " + KEY_ONTOURCOLLECTION + " FROM "
+                + TABLE_TOUR + " WHERE " + KEY_ID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        String count = null;
+
+        if (cursor.moveToNext()) {
+            count = cursor.getString(cursor.getColumnIndex(KEY_ONTOURCOLLECTION));
+        }
+        cursor.close();
+
+        return count;
+    }
+
     /*
      * Updating a tour
      */
@@ -247,7 +341,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_EVENTID, tour.getEventId());
         values.put(KEY_EVENTNAME, tour.getEventName());
         values.put(KEY_EVENTSTARTDATE, tour.getEventStartDate());
         values.put(KEY_EVENTENDDATE, tour.getEventEndDate());
@@ -255,10 +348,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_CASHCARRIED, tour.getCashCarried());
         values.put(KEY_ONTOURCOLLECTION, tour.getOnTourCollection());
         values.put(KEY_CREATED_AT, getDateTime());
+        values.put(KEY_UPDATED_AT, getDateTime());
+
+        Log.e("query", KEY_ID + " = ?" + "   " +
+                new String[]{String.valueOf(tour.getId())});
 
         // updating row
-        return db.update(TABLE_TOUR, values, KEY_ID + " = ?",
+        return db.update(TABLE_TOUR, values, KEY_ID + " = 1",
                 new String[]{String.valueOf(tour.getId())});
+    }
+
+    public int updatesTour(Tour tour) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_EVENTNAME, tour.getEventName());
+        values.put(KEY_EVENTSTARTDATE, tour.getEventStartDate());
+        values.put(KEY_EVENTENDDATE, tour.getEventEndDate());
+        values.put(KEY_LEADERS, tour.getLeaders());
+        values.put(KEY_CASHCARRIED, tour.getCashCarried());
+        values.put(KEY_ONTOURCOLLECTION, tour.getOnTourCollection());
+        values.put(KEY_UPDATED_AT, getDateTime());
+
+        int i = db.update(TABLE_TOUR, values, KEY_ID + "=?", new String[]{String.valueOf(tour.getId() + 1)});
+        Log.e("I=", String.valueOf(i));
+        return i;
     }
 
     /*
@@ -282,6 +396,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_EVENTID, expense.getEventId());
         values.put(KEY_AMOUNT, expense.getAmount());
+        values.put(KEY_TYPE, expense.getType());
         values.put(KEY_DESCRIPTION, expense.getDescription());
         values.put(KEY_CREATED_AT, getDateTime());
 
@@ -298,8 +413,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Expense> expense = new ArrayList<Expense>();
         String selectQuery = "SELECT  * FROM " + TABLE_EXPENSE + " WHERE " + KEY_EVENTID + " = " + id;
 
-        Log.e(LOG, selectQuery);
-
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -309,11 +422,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Expense e = new Expense();
                 e.setId(c.getInt((c.getColumnIndex(KEY_ID))));
                 e.setEventId(c.getInt(c.getColumnIndex(KEY_EVENTID)));
-                e.setAmount(c.getString(c.getColumnIndex(KEY_AMOUNT)));
+                e.setAmount(c.getInt(c.getColumnIndex(KEY_AMOUNT)));
+                e.setType(c.getString(c.getColumnIndex(KEY_TYPE)));
                 e.setDescription(c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
-
-                Log.e("Details", String.valueOf(c.getInt((c.getColumnIndex(KEY_ID)))) + "   " + c.getInt(c.getColumnIndex(KEY_EVENTID))
-                        + "   " + c.getString(c.getColumnIndex(KEY_AMOUNT)) + "   " + c.getString(c.getColumnIndex(KEY_DESCRIPTION)));
 
                 // adding to expense list
                 expense.add(e);
@@ -322,7 +433,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return expense;
     }
 
-    public List<String> getExpense(int id) {
+    public List<String> getAmount(int id) {
         String[] columns = new String[]{KEY_AMOUNT};
         String selectQuery = "SELECT  * FROM " + TABLE_EXPENSE + " WHERE " + KEY_EVENTID + " = " + id;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -335,6 +446,134 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             result.add(c.getString(iCM));
         }
         return result;
+    }
+
+    public int addAccommodation(int pos) {
+        String s = "Accommodation";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public int addFood(int pos) {
+        String s = "Food";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public int addGuide(int pos) {
+        String s = "Guide";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public int addParking(int pos) {
+        String s = "Parking";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public int addPersonal(int pos) {
+        String s = "Personal";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public int addTips(int pos) {
+        String s = "Tips";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public int addTolls(int pos) {
+        String s = "Toll";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
+    }
+
+    public int addTransport(int pos) {
+        String s = "Transport";
+        String countQuery = "SELECT SUM(" + KEY_AMOUNT + ") FROM "
+                + TABLE_EXPENSE + " WHERE " + KEY_TYPE + " = '" + s + "' AND " + KEY_EVENTID + " = " + pos;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+
+        int count = 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+
+        return count;
     }
 
     /*
