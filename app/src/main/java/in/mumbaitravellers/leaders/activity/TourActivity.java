@@ -39,6 +39,10 @@ public class TourActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tour);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setLogo(R.drawable.ic_launcher);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_launcher);
+
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -50,7 +54,7 @@ public class TourActivity extends AppCompatActivity {
         tourList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Tour tour = new Tour();
+
                 Expense expense = new Expense();
                 int s = db.getEventID(position);
                 expense.setEventId(s);
@@ -93,6 +97,49 @@ public class TourActivity extends AppCompatActivity {
                 editLeader.setText(LEADER);
                 editCashCarried.setText(CASH);
                 editOnTour.setText(CASHCARRIED);
+
+                editStartDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar mcurrentDate = Calendar.getInstance();
+                        int mYear = mcurrentDate.get(Calendar.YEAR);
+                        int mMonth = mcurrentDate.get(Calendar.MONTH);
+                        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog mDatePicker = new DatePickerDialog(TourActivity.this, new DatePickerDialog.OnDateSetListener() {
+                            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                                Calendar newDate = Calendar.getInstance();
+                                newDate.set(selectedyear, selectedmonth, selectedday);
+                                editStartDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+                            }
+                        }, mYear, mMonth, mDay);
+                        mDatePicker.setTitle("Select date");
+                        mDatePicker.show();
+
+                    }
+                });
+
+                editEndDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar mcurrentDate = Calendar.getInstance();
+                        int mYear = mcurrentDate.get(Calendar.YEAR);
+                        int mMonth = mcurrentDate.get(Calendar.MONTH);
+                        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog mDatePicker = new DatePickerDialog(TourActivity.this, new DatePickerDialog.OnDateSetListener() {
+
+                            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                                Calendar newDate = Calendar.getInstance();
+                                newDate.set(selectedyear, selectedmonth, selectedday);
+                                editEndDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+                            }
+                        }, mYear, mMonth, mDay);
+                        mDatePicker.setTitle("Select date");
+                        mDatePicker.show();
+
+                    }
+                });
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(TourActivity.this);
                 builder.setView(content)
@@ -153,12 +200,36 @@ public class TourActivity extends AppCompatActivity {
 
                         DatePickerDialog mDatePicker = new DatePickerDialog(TourActivity.this, new DatePickerDialog.OnDateSetListener() {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
-                                // TODO Auto-generated method stub
-                    /*      Your code   to get date and time    */
+                                Calendar newDate = Calendar.getInstance();
+                                newDate.set(selectedyear, selectedmonth, selectedday);
+                                editStartDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
                             }
                         }, mYear, mMonth, mDay);
                         mDatePicker.setTitle("Select date");
                         mDatePicker.show();
+
+                    }
+                });
+
+                editEndDate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar mcurrentDate = Calendar.getInstance();
+                        int mYear = mcurrentDate.get(Calendar.YEAR);
+                        int mMonth = mcurrentDate.get(Calendar.MONTH);
+                        int mDay = mcurrentDate.get(Calendar.DAY_OF_MONTH);
+
+                        DatePickerDialog mDatePicker = new DatePickerDialog(TourActivity.this, new DatePickerDialog.OnDateSetListener() {
+
+                            public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
+                                Calendar newDate = Calendar.getInstance();
+                                newDate.set(selectedyear, selectedmonth, selectedday);
+                                editEndDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+                            }
+                        }, mYear, mMonth, mDay);
+                        mDatePicker.setTitle("Select date");
+                        mDatePicker.show();
+
                     }
                 });
 
