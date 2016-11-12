@@ -12,8 +12,9 @@
 
     <EditText
         android:id="@+id/edtxt_expense"
-        android:layout_width="match_parent"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
+        android:hint=""
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:inputType="number" />
 
@@ -25,7 +26,7 @@
 
     <Spinner
         android:id="@+id/spinner_type"
-        android:layout_width="match_parent"
+        android:layout_width="368dp"
         android:layout_height="40dp"
         android:entries="@array/expense_type_array"
         android:prompt="@string/expense_prompt" />
@@ -38,7 +39,7 @@
 
     <EditText
         android:id="@+id/edtxt_description"
-        android:layout_width="match_parent"
+        android:layout_width="368dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:inputType="textLongMessage|textCapCharacters" />

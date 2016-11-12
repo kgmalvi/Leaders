@@ -113,7 +113,7 @@ public class ExpenseActivity extends AppCompatActivity {
                                 expense.setType(spinnerType.getSelectedItem().toString());
                                 expense.setDescription(editDescription.getText().toString());
 
-                               //long t = db.createExpense(expense);
+                                long t = db.createExpense(expense);
 
                                 displayList();
 
@@ -149,6 +149,9 @@ public class ExpenseActivity extends AppCompatActivity {
             case R.id.send:
                 sendEmail();
                 break;
+            case android.R.id.home:
+                finish();
+                break;
         }
         return true;
     }
@@ -175,7 +178,8 @@ public class ExpenseActivity extends AppCompatActivity {
         for (int i = 0; i < allExpense.size(); i++) {
             s += "₹" + allExpense.get(i).getAmount() + "       " /*
                     + allExpense.get(i).getType() + "\t" */
-                    + allExpense.get(i).getDescription() + "\n";
+                    + allExpense.get(i).getDescription() + "     "
+                    + allExpense.get(i).getCreatedAt() + "\n";
         }
 
         String[] TO = {"jogi444u@gmail.com"};
@@ -232,6 +236,11 @@ public class ExpenseActivity extends AppCompatActivity {
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(ExpenseActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(ExpenseActivity.this, TourActivity.class));
     }
 
     private void displayList() {

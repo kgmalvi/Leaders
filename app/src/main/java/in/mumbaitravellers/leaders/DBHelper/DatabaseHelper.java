@@ -366,10 +366,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(KEY_LEADERS, tour.getLeaders());
         values.put(KEY_CASHCARRIED, tour.getCashCarried());
         values.put(KEY_ONTOURCOLLECTION, tour.getOnTourCollection());
-       /* values.put(KEY_CREATED_AT, getDateTime());
-        values.put(KEY_UPDATED_AT, getDateTime());*/
+        values.put(KEY_UPDATED_AT, getDateTime());
 
-        int i = db.update(TABLE_TOUR, values, KEY_EVENTID + "=?", new String[]{String.valueOf(tour.getEventId())});
+        int i = db.update(TABLE_TOUR, values, KEY_ID + "=?", new String[]{String.valueOf(tour.getId() + 1)});
         Log.e("I=", String.valueOf(i));
         return i;
     }

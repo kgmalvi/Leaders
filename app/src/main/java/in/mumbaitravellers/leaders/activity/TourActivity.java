@@ -103,6 +103,7 @@ public class TourActivity extends AppCompatActivity {
 
                                 Tour tour = new Tour();
 
+                                tour.setId(position);
                                 tour.setEventId(db.getEventID(position));
                                 tour.setEventName(editEvent.getText().toString());
                                 tour.setEventStartDate(editStartDate.getText().toString());
@@ -213,6 +214,14 @@ public class TourActivity extends AppCompatActivity {
                 dialog.show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     /*@Override
