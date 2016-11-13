@@ -2,8 +2,6 @@ package in.mumbaitravellers.leaders.activity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -203,7 +201,7 @@ public class ExpenseActivity extends AppCompatActivity {
 
         String[] TO = {"jogi444u@gmail.com"};
         String[] CC = {""};
-        final Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
         SpannableString styledString = new SpannableString(eventName + "\n\n"
                 + eventStart + " to " + eventEnd
@@ -250,16 +248,7 @@ public class ExpenseActivity extends AppCompatActivity {
         emailIntent.putExtra(Intent.EXTRA_TEXT, styledString);
 
         try {
-            final PackageManager pm = getPackageManager();
-            final List<ResolveInfo> matches = pm.queryIntentActivities(emailIntent, 0);
-            ResolveInfo best = null;
-            for (final ResolveInfo info : matches)
-                if (info.activityInfo.packageName.endsWith(".gm") ||
-                        info.activityInfo.name.toLowerCase().contains("gmail")) best = info;
-            if (best != null)
-                emailIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name);
-            startActivity(emailIntent);
-            //startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+            startActivity(Intent.createChooser(emailIntent, "Send mail..."));
             finish();
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(ExpenseActivity.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
