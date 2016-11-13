@@ -193,9 +193,9 @@ public class ExpenseActivity extends AppCompatActivity {
 
         String s = "\n";
         for (int i = 0; i < allExpense.size(); i++) {
-            s += "₹" + allExpense.get(i).getAmount() + "       " /*
+            s += "₹" + allExpense.get(i).getAmount() + "\t\t" /*
                     + allExpense.get(i).getType() + "\t" */
-                    + allExpense.get(i).getDescription() + "     "
+                    + allExpense.get(i).getDescription() + "\t\t"
                     + allExpense.get(i).getCreatedAt() + "\n";
         }
 
