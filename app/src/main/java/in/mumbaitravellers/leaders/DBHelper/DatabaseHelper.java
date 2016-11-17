@@ -64,7 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Tour table create statement
     private static final String CREATE_TABLE_TOUR = "CREATE TABLE "
             + TABLE_TOUR + "(" + KEY_ID + " INTEGER PRIMARY KEY ," + KEY_EVENTID + " INTEGER," + KEY_EVENTNAME
-            + " TEXT," + KEY_EVENTSTARTDATE + " TEXT," + KEY_EVENTENDDATE + " TEXT," + KEY_LEADERS + " TEXT,"
+            + " DATE," + KEY_EVENTSTARTDATE + " TEXT," + KEY_EVENTENDDATE + " TEXT," + KEY_LEADERS + " TEXT,"
             + KEY_CASHCARRIED + " TEXT," + KEY_ONTOURCOLLECTION + " TEXT,"
             + KEY_CREATED_AT + " DATETIME, " + KEY_UPDATED_AT + " DATETIME" + ")";
 
@@ -117,7 +117,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(KEY_EVENTID, tour.getEventId());
         values.put(KEY_EVENTNAME, tour.getEventName());
-        values.put(KEY_EVENTSTARTDATE, tour.getEventStartDate());
+        values.put(KEY_EVENTSTARTDATE, String.valueOf(tour.getEventStartDate()));
         values.put(KEY_EVENTENDDATE, tour.getEventEndDate());
         values.put(KEY_LEADERS, tour.getLeaders());
         values.put(KEY_CASHCARRIED, tour.getCashCarried());
@@ -149,6 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             c.moveToFirst();
 
         Tour td = new Tour();
+
         td.setEventId(c.getInt(c.getColumnIndex(KEY_EVENTID)));
         td.setEventName(c.getString(c.getColumnIndex(KEY_EVENTNAME)));
         td.setEventStartDate(c.getString(c.getColumnIndex(KEY_EVENTSTARTDATE)));
@@ -165,7 +166,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     * */
     public List<Tour> getAllTours() {
         List<Tour> tours = new ArrayList<Tour>();
-        String selectQuery = "SELECT  * FROM " + TABLE_TOUR;
+        String selectQuery = "SELECT  * FROM " + TABLE_TOUR + " ORDER BY DATE("
+                + KEY_EVENTSTARTDATE + ") ASC";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -174,6 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (c.moveToFirst()) {
             do {
                 Tour td = new Tour();
+
                 td.setId(c.getInt(c.getColumnIndex(KEY_ID)));
                 td.setEventId(c.getInt(c.getColumnIndex(KEY_EVENTID)));
                 td.setEventName(c.getString(c.getColumnIndex(KEY_EVENTNAME)));
@@ -337,7 +340,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /*
      * Updating a tour
      */
-    public int updateTour(Tour tour) {
+    /*public int updateTour(Tour tour) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -356,14 +359,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // updating row
         return db.update(TABLE_TOUR, values, KEY_ID + " = 1",
                 new String[]{String.valueOf(tour.getId())});
-    }
+    }*/
 
     public int updatesTour(Tour tour) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(KEY_EVENTNAME, tour.getEventName());
-        values.put(KEY_EVENTSTARTDATE, tour.getEventStartDate());
+        values.put(KEY_EVENTSTARTDATE, String.valueOf(tour.getEventStartDate()));
         values.put(KEY_EVENTENDDATE, tour.getEventEndDate());
         values.put(KEY_LEADERS, tour.getLeaders());
         values.put(KEY_CASHCARRIED, tour.getCashCarried());

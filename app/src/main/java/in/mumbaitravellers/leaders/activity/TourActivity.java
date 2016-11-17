@@ -88,15 +88,15 @@ public class TourActivity extends AppCompatActivity {
                 String START = db.getStartDate(position + 1);
                 String END = db.getEndDate(position + 1);
                 String LEADER = db.getLeader(position + 1);
-                String CASH = db.getOnTour(position + 1);
-                String CASHCARRIED = db.getCashCarried(position + 1);
+                String CASH = db.getCashCarried(position + 1);
+                String onTour = db.getOnTour(position + 1);
 
                 editEvent.setText(NAME);
                 editStartDate.setText(START);
                 editEndDate.setText(END);
                 editLeader.setText(LEADER);
                 editCashCarried.setText(CASH);
-                editOnTour.setText(CASHCARRIED);
+                editOnTour.setText(onTour);
 
                 editStartDate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -110,7 +110,7 @@ public class TourActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                                 Calendar newDate = Calendar.getInstance();
                                 newDate.set(selectedyear, selectedmonth, selectedday);
-                                editStartDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+                                editStartDate.setText(selectedday + "/" + (selectedmonth + 1) + "/" + selectedyear);
                             }
                         }, mYear, mMonth, mDay);
                         mDatePicker.setTitle("Select date");
@@ -132,7 +132,7 @@ public class TourActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                                 Calendar newDate = Calendar.getInstance();
                                 newDate.set(selectedyear, selectedmonth, selectedday);
-                                editEndDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+                                editEndDate.setText(selectedday + "/" + (selectedmonth + 1) + "/" + selectedyear);
                             }
                         }, mYear, mMonth, mDay);
                         mDatePicker.setTitle("Select date");
@@ -160,6 +160,12 @@ public class TourActivity extends AppCompatActivity {
                                 tour.setOnTourCollection(editOnTour.getText().toString());
 
                                 db.updatesTour(tour);
+
+                                Snackbar.make(findViewById(android.R.id.content),
+                                        "Event Updated Successfully.", Snackbar.LENGTH_LONG)
+                                        .setActionTextColor(Color.RED)
+                                        .show();
+
                                 displayList();
 
                             }
@@ -202,7 +208,7 @@ public class TourActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                                 Calendar newDate = Calendar.getInstance();
                                 newDate.set(selectedyear, selectedmonth, selectedday);
-                                editStartDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+                                editStartDate.setText(selectedday + "/" + (selectedmonth + 1) + "/" + selectedyear);
                             }
                         }, mYear, mMonth, mDay);
                         mDatePicker.setTitle("Select date");
@@ -224,7 +230,7 @@ public class TourActivity extends AppCompatActivity {
                             public void onDateSet(DatePicker datepicker, int selectedyear, int selectedmonth, int selectedday) {
                                 Calendar newDate = Calendar.getInstance();
                                 newDate.set(selectedyear, selectedmonth, selectedday);
-                                editEndDate.setText(selectedday + "/" + selectedmonth + "/" + selectedyear);
+                                editEndDate.setText(selectedday + "/" + (selectedmonth + 1) + "/" + selectedyear);
                             }
                         }, mYear, mMonth, mDay);
                         mDatePicker.setTitle("Select date");
@@ -253,6 +259,16 @@ public class TourActivity extends AppCompatActivity {
                                         } else {
 
                                             Tour tour = new Tour();
+
+                                            /*DateFormat format = new SimpleDateFormat("M d, yyyy", Locale.ENGLISH);
+                                            Date str = null;
+
+                                            try {
+                                                str = format.parse(editStartDate.getText().toString());
+                                                Log.d("dateshow", String.valueOf(str));
+                                            } catch (ParseException e) {
+                                                e.printStackTrace();
+                                            }*/
 
                                             tour.setEventId((int) System.currentTimeMillis());
                                             tour.setEventName(editEvent.getText().toString().toUpperCase());
