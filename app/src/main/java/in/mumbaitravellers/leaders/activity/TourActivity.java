@@ -88,15 +88,15 @@ public class TourActivity extends AppCompatActivity {
                 String START = db.getStartDate(position + 1);
                 String END = db.getEndDate(position + 1);
                 String LEADER = db.getLeader(position + 1);
-                String CASH = db.getOnTour(position + 1);
-                String CASHCARRIED = db.getCashCarried(position + 1);
+                String CASH = db.getCashCarried(position + 1);
+                String onTour = db.getOnTour(position + 1);
 
                 editEvent.setText(NAME);
                 editStartDate.setText(START);
                 editEndDate.setText(END);
                 editLeader.setText(LEADER);
                 editCashCarried.setText(CASH);
-                editOnTour.setText(CASHCARRIED);
+                editOnTour.setText(onTour);
 
                 editStartDate.setOnClickListener(new View.OnClickListener() {
                     @Override
